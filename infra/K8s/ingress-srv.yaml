@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex:  'true'
+spec:
+  ingressClassName: nginx
+  rules: 
+    - host: ticketing.dev  # made up domain name, only works in local system if added to /etc/hosts file
+      http: 
+        paths:  
+          - path: /api/users/?(.*)   # ?(.*) means anything can come after /api/users/
+            pathType: ImplementationSpecific
+            backend: 
+              service:
+                name: auth-srv
+                port: 
+                  number: 3000

@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy: 
+  kubectl: 
+    manifests: 
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts: 
+    - image: sagarcom853/auth
+      context: auth
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual: 
+          - src: 'src/**/*.ts'   # - because it will br an array, looks into every file ending in ts 
+            dest:  . # check where the file was found and throw it to the corresponding folder 
