@@ -1,20 +1,14 @@
-import type { Request, Response, NextFunction} from "express";
+import type { Request, Response, NextFunction } from "express";
+// import { RequestValidationError } from "./RequestValidationError.js";
+// import { DatabaseConnectionError } from "./databaseConnection-error.js";
+import { CustomError } from "../errors/customError.js";
 
-interface CustomError extends Error {
-  statusCode?: number;
-  errors?: { message: string; field?: string }[];
-}
 
-export const errorHandler = (
-  err: CustomError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
 
-  // Set default status code and error format
-  const statusCode = err.statusCode || 400;
-  const errors = err.errors || [{ message: err.message || 'Something went wrong' }];
+  if (err instanceof CustomError) {
+    return res.status(err.statusCode).send({ errors: err.serializeErrors() });
+  }
 
-  res.status(statusCode).send({ errors });
+  return res.status(400).send({ errors: [{ message: "Something went wrong" }] });
 };

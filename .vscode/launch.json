@@ -1,21 +1,40 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/auth/src/index.ts",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
-        }
-    ]
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Debug All (Frontend + Backend)",
+      "configurations": ["Backend Debug", "Frontend Debug"]
+    }
+  ],
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Backend Debug",
+      // "restart": true,
+      // "address": "localhost",
+      "port": 3000,
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/auth", 
+      "outFiles": ["${workspaceFolder}/auth/**/*.js"]
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Frontend Debug",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/client/src",
+      "sourceMaps": true,
+      "trace": true
+    },
+    {
+      "name": "Skaffold Dev",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/.bin/skaffold",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
 }
